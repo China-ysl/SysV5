@@ -1,0 +1,14 @@
+.ipt {
+	width: 176px;
+}
+
+.err {
+	width: 176px;
+	border: 2px red solid;
+}
+
+.err-span {
+	color: red;
+	font-size: 12px;
+	font-family: '楷体';
+}

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+    <!--开启自动扫描注解的组件-->
+    <context:component-scan base-package="com.iflytek">
+        <!-- 排除注解Controller，在mvc那已经扫描过了 -->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--加载路径下的dp.properties-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+
+    <!--配置连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!-- spring 提供会话工厂bean -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis-spring.xml"/>
+        <!-- 根据通配符扫描映射文件 -->
+        <property name="mapperLocations" value="classpath:mappers/*Mapper.xml"/>
+    </bean>
+    <!-- 定义Mapper接口扫描器：让其自动生成接口的代理实现类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.iflytek.sys.dao"></property>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+
+    <!-- 配置Spring数据源事务管理器 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 定义事务通知,指定事务管理器 -->
+    <tx:advice id="jdbcAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <!--定义事物的行为-->
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="set*" propagation="REQUIRED"/>
+            <tx:method name="modify*" propagation="REQUIRED"/>
+            <!--查询的可以不用加事物-->
+            <tx:method name="find*" propagation="NOT_SUPPORTED"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--aop的配置-->
+    <aop:config>
+        <!--定义一个切点-->
+        <aop:pointcut id="pc" expression="execution(* com.iflytek.sys.dao.*.*(..))"/>
+        <aop:advisor advice-ref="jdbcAdvice" pointcut-ref="pc"/>
+    </aop:config>
+
+
+</beans>

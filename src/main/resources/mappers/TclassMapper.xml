@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iflytek.sys.dao.ITClassDao">
+	
+	<resultMap id="rsTclass" type="tclass">
+		<result property="id" column="ID" />
+		<result property="name" column="NAME" />
+		<result property="charger" column="CHARGER" />
+		<result property="createDate" column="CREATE_DATE" />
+	</resultMap>
+	
+	<sql id="sql_column_items">
+		ID, 
+		NAME, 
+		CHARGER, 
+		CREATE_DATE
+	</sql>
+	
+	
+	<select id="getTClassById" resultMap="rsTclass" parameterType="integer">
+		select <include refid="sql_column_items"/> from t_class
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+	
+	
+	<select id="findAllTClassList" resultMap="rsTclass">
+		select  <include refid="sql_column_items"/> from t_class
+		<where>
+			<if test="id != null and  id != 0">
+				and ID = #{id}
+			</if>
+			<if test="name != null and name != '' ">
+				and NAME like '%${name}%'
+			</if>
+			<if test="charger != null and charger != '' ">
+				and CHARGER like '%${charger}%'
+			</if>
+			<if test="createDateBegin != null" >
+				<![CDATA[
+				and CREATE_DATE >= #{createDateBegin} 
+				]]> 
+			</if>
+			<if test="createDateEnd != null" > 
+				<![CDATA[
+				and CREATE_DATE <= #{createDateEnd}
+				]]> 
+			</if>
+		</where>
+		<if test="order != null and order != '' ">  
+			order by ${order} ${sort}
+		</if>
+	</select>
+	
+	<insert id="add" parameterType="tclass">
+		insert into t_class 
+			(
+			NAME,
+			CHARGER, 
+			CREATE_DATE
+			) 
+		values
+			(
+			#{name, jdbcType=VARCHAR},
+			#{charger, jdbcType=VARCHAR}, 
+			now()
+			)
+	</insert>
+	
+	<update id="update" parameterType="tclass">
+		update t_class
+			 <set> 
+				<if test=" name != null ">NAME = #{name, jdbcType=VARCHAR}, </if>
+				<if test=" charger != null ">CHARGER = #{charger, jdbcType=VARCHAR}, </if>
+				<if test=" createDate != null ">CREATE_DATE = #{createDate, jdbcType=TIMESTAMP}, </if>
+				ID = #{id}
+			<where>
+				ID = #{id}
+			</where>
+		</set>
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from t_class
+		<where>
+			ID = #{id}
+		</where>
+	</delete>
+	
+</mapper>

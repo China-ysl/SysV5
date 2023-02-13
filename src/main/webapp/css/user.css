@@ -1,0 +1,49 @@
+
+body {
+	padding: 0px;
+	margin: 0px;
+}
+
+
+#div-list {
+	background-color: #E0FFFF;
+}
+
+
+.fset {
+	border-radius: 20px;
+}
+
+.ipt {
+	width: 156px;
+}
+
+.tab_list {
+	/* 删除双边框 */
+	border-collapse: collapse;
+}
+
+.tab_list th {
+	font-weight: bold;
+	font-size: 20px;
+	background-color: #ADFF2F;
+	border: 1px black solid;
+}
+
+.tab_list td {
+	text-align: center;
+	border: 1px black solid;
+}
+
+
+.tr0 {
+	background-color: #E0FFFF;
+}
+
+.tr1 {
+	background-color: #ffe0fd;
+}
+
+a {
+	text-decoration: none;
+}

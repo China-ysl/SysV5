@@ -1,0 +1,54 @@
+
+body {
+	/* 去掉浏览器自带的边距 */
+	margin: 0px;
+	padding: 0px;
+}
+
+
+#menu {
+	width: 182px;
+}
+
+h1 {
+	font-size: 15px;
+	width: 182px;
+	height: 30px;
+	margin: 0px;
+	text-align: center;
+	background: url(../images/menu_bgs.gif) no-repeat;
+}
+
+h1 a {
+	height: 30px;
+	line-height: 30px;
+	color: #000000;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.menu-ul {
+	line-height: 26px;
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+.menu-ul a {
+	display: block;
+	height: 26px;
+	line-height: 26px;
+	text-align: center;
+	color: #333333;
+	font-size: 12px;
+	text-decoration: none;
+	background: url(../images/menu_bg1.gif) no-repeat;
+	/* border-bottom: 1px solid #51a9f18c; */
+}
+
+/* 鼠标移上状态 */
+.menu-ul a:hover {
+	color: #006600;
+	font-weight: bold;
+	background: url(../images/menu_bg2.gif) no-repeat;
+}

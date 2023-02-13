@@ -1,0 +1,39 @@
+body {
+	background-image: url(../images/1.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+#login {
+	/* 宽度设置 */
+	width: 480px;
+	/* 高度 */
+	height: 230px;
+	background-color: bisque;
+	/* 水平方向居中 */
+	margin: 150px auto;
+	/* 圆角 */
+	border-radius: 20px;
+	/* 背景透明度0~1 */
+	opacity: 0.8;
+	/* 居中 */
+	text-align: center;
+}
+
+#title {
+	/* 设置字体大小 */
+	font-size: 26px;
+	/* 上内边距 */
+	padding-top: 30px
+}
+
+table {
+	width: 100%;
+	margin: 10px auto;
+}
+
+table tr {
+	height: 40px;
+}
+
+

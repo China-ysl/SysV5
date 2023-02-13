@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iflytek.sys.dao.IUserDao">
+	<resultMap id="rsUser" type="User">
+		<result property="id" column="ID" />
+		<result property="name" column="NAME" />
+		<result property="sex" column="SEX" />
+		<result property="birthday" column="BIRTHDAY" />
+		<result property="username" column="USERNAME" />
+		<result property="password" column="PASSWORD" />
+		<result property="loginFlag" column="LOGIN_FLAG" />
+		<result property="roleId" column="ROLE_ID" />
+		<result property="filePath" column="FILE_PATH" />
+		<result property="createDate" column="CREATE_DATE" />
+	</resultMap>
+	
+	<sql id="sql_column_items">
+		ID, 
+		NAME, 
+		SEX, 
+		BIRTHDAY, 
+		USERNAME, 
+		PASSWORD, 
+		LOGIN_FLAG, 
+		ROLE_ID, 
+		FILE_PATH, 
+		CREATE_DATE
+	</sql>
+
+	<select id="login" resultMap="rsUser">
+		select <include refid="sql_column_items"/> from t_user
+		<where>
+			username = #{username} and password = #{password}
+		</where>
+	</select>
+	
+	<select id="getUserById" resultMap="rsUser" parameterType="java.lang.Integer">
+		select <include refid="sql_column_items"/> from t_user
+		<where>
+			ID = #{id}
+		</where>
+	</select>
+	
+	
+	<select id="findAllUserList" resultMap="rsUser">
+		select <include refid="sql_column_items"/> from t_user
+		<where>
+			<if test="id != null and id !=0 ">
+				and ID = #{id}
+			</if>
+			<if test="name != null and name != '' ">
+				and NAME like '%${name}%'
+			</if>
+			<if test="sex != null and sex != 0 ">
+				and SEX = #{sex}
+			</if>
+			<if test="username != null and username != '' ">
+				and USERNAME like '%${username}%'
+			</if>
+			<if test="password != null and password != '' ">
+				and PASSWORD = #{password}
+			</if>
+			<if test="loginFlag != null and loginFlag != 0 ">
+				and LOGIN_FLAG = #{loginFlag}
+			</if>
+			<if test="User != null and User.roleId != null and User.roleId != 0 ">  
+				and ROLE_ID = #{User.roleId}
+			</if>
+			<if test="User != null and User.filePath != null and User.filePath != '' ">  
+				and FILE_PATH = #{User.filePath}
+			</if>
+			<if test="createDateBegin != null" >
+				<![CDATA[
+				and CREATE_DATE >= #{createDateBegin} 
+				]]> 
+			</if>
+			<if test="createDateEnd != null" > 
+				<![CDATA[
+				and CREATE_DATE <= #{createDateEnd}
+				]]> 
+			</if>
+		</where>
+		<if test="order != null and order != '' ">  
+			order by ${order} ${sort}
+		</if>
+	</select>
+	
+	<insert id="add" parameterType="User">
+		insert into t_user 
+			(
+			NAME,
+			SEX, 
+			BIRTHDAY, 
+			USERNAME, 
+			PASSWORD, 
+			LOGIN_FLAG, 
+			ROLE_ID, 
+			FILE_PATH, 
+			CREATE_DATE
+			) 
+		values
+			(
+			#{name, jdbcType=VARCHAR},
+			#{sex, jdbcType=NUMERIC}, 
+			#{birthday, jdbcType=TIMESTAMP}, 
+			#{username, jdbcType=VARCHAR}, 
+			#{password, jdbcType=VARCHAR}, 
+			#{loginFlag, jdbcType=NUMERIC}, 
+			#{roleId, jdbcType=NUMERIC}, 
+			#{filePath, jdbcType=VARCHAR}, 
+			now()
+			)
+	</insert>
+	
+	<update id="update" parameterType="User">
+		update t_user
+			 <set> 
+				<if test=" name != null ">NAME = #{name, jdbcType=VARCHAR}, </if>
+				<if test=" sex != null ">SEX = #{sex, jdbcType=NUMERIC}, </if>
+				<if test=" birthday != null ">BIRTHDAY = #{birthday, jdbcType=TIMESTAMP}, </if>
+				<if test=" username != null ">USERNAME = #{username, jdbcType=VARCHAR}, </if>
+				<if test=" password != null ">PASSWORD = #{password, jdbcType=VARCHAR}, </if>
+				<if test=" loginFlag != null ">LOGIN_FLAG = #{loginFlag, jdbcType=NUMERIC}, </if>
+				<if test=" roleId != null ">ROLE_ID = #{roleId, jdbcType=NUMERIC}, </if>
+				<if test=" filePath != null ">FILE_PATH = #{filePath, jdbcType=VARCHAR}, </if>
+				<if test=" createDate != null ">CREATE_DATE = #{createDate, jdbcType=TIMESTAMP}, </if>
+				ID = #{id}
+			<where>
+				ID = #{id}
+			</where>
+		</set>
+	</update>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from t_user
+		<where>
+			ID = #{id}
+		</where>
+	</delete>
+	
+</mapper>
